@@ -34,6 +34,10 @@ with open("README.md", "r", encoding="utf-8") as fh:
 # ninja build does not work unless include_dirs are abs path
 this_dir = os.path.dirname(os.path.abspath(__file__))
 
+# If CUDA_HOME is not set, try to derive it from nvcc path
+if os.environ.get("CUDA_HOME") is None and shutil.which("nvcc") is not None:
+    os.environ["CUDA_HOME"] = os.path.dirname(os.path.dirname(shutil.which("nvcc")))
+
 PACKAGE_NAME = "causal_conv1d"
 
 BASE_WHEEL_URL = "https://github.com/Dao-AILab/causal-conv1d/releases/download/{tag_name}/{wheel_name}"
