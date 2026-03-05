@@ -10,6 +10,18 @@ from pathlib import Path
 from packaging.version import parse, Version
 import platform
 
+# If CUDA_HOME is not set, try to derive it from nvcc path or default installation
+if os.environ.get("CUDA_HOME") is None:
+    if shutil.which("nvcc") is not None:
+        os.environ["CUDA_HOME"] = os.path.dirname(os.path.dirname(shutil.which("nvcc")))
+    elif os.path.exists("/usr/local/cuda"):
+        os.environ["CUDA_HOME"] = "/usr/local/cuda"
+
+print(f"--- DEBUG: causal_conv1d setup.py ---")
+print(f"--- DEBUG: CUDA_HOME: {os.environ.get('CUDA_HOME')}")
+print(f"--- DEBUG: nvcc path: {shutil.which('nvcc')}")
+print(f"--- DEBUG: PATH: {os.environ.get('PATH')[:100]}...")
+
 from setuptools import setup, find_packages
 import subprocess
 
